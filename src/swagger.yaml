@@ -107,12 +107,3 @@ components:
 security:
 - bearerAuth: []
 
-tags:
-- name: Orders
-  description: Operations related to orders
-
-- name: Items
-  description: Operations related to items
-
-- name: Users
-  description: Operations related to users
