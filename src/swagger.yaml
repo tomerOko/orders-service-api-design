@@ -1,0 +1,112 @@
+openapi: 3.0.1
+info:
+  title: Pre-Order API
+  description: API for managing pre-orders, items, and users with event-based communication.
+  version: 1.0.0
+servers:
+- url: http://localhost:3000/api
+
+paths:
+  /orders:
+    post:
+      summary: Create a new order
+      description: Create a new order and trigger necessary events.
+      tags:
+      - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      itemId:
+                        type: string
+                      quantity:
+                        type: number
+                addressId:
+                  type: string
+                paymentMethodId:
+                  type: string
+      responses:
+        '201':
+          description: Order created successfully
+        '409':
+          description: Conflict error
+
+components:
+  schemas:
+    Item:
+      type: object
+      properties:
+        itemId:
+          type: string
+        quantity:
+          type: number
+        price:
+          type: number
+
+    User:
+      type: object
+      properties:
+        userId:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+
+    Order:
+      type: object
+      properties:
+        orderId:
+          type: string
+        userId:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+        addressId:
+          type: string
+        paymentMethodId:
+          type: string
+        totalPrice:
+          type: number
+
+  responses:
+    ConflictError:
+      description: Conflict error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+              message:
+                type: string
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+- bearerAuth: []
+
+tags:
+- name: Orders
+  description: Operations related to orders
+
+- name: Items
+  description: Operations related to items
+
+- name: Users
+  description: Operations related to users
